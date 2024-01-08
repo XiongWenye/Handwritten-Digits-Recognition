@@ -61,13 +61,13 @@ def image_split_column(img:np.ndarray)->list:
         if columnHist[i]==0 and columnHist[i+1]>0:
             if flag==0:
                 flag=1
-                startList.append(max(1,i-20))
+                startList.append(i)
         if columnHist[i]>0 and columnHist[i+1]==0:
             if flag==1:
                 flag=0
-                endList.append(min(column-1,i+20))
-           
-    
+                endList.append(i)
+    if len(endList)<len(startList):
+        endList.append(column)
     # step 2:
     # following the startList and the endList, split the digits area from the original image.
     # there maybe several areas. recorder the areas in imgList and return imgList.
@@ -118,15 +118,14 @@ def image_split_row(img:np.ndarray)->list:
         if rowHist[i]==0 and rowHist[i+1]>0:
             if flag==0:
                 flag=1
-                startList.append(max(1,i-20))
+                startList.append(i)
         if rowHist[i]>0 and rowHist[i+1]==0:
             if flag==1:
                 flag=0
-                endList.append(min(row-1,i+20))
-    
-    
-    
-    
+                endList.append(i)
+               
+    if len(endList)<len(startList):
+        endList.append(row)
         
     # step 2:
     # following the startList and the endList, split the digits area from the original image.
@@ -136,37 +135,6 @@ def image_split_row(img:np.ndarray)->list:
         imgList.append(img[startList[i]:endList[i],:])
     return imgList
      
-def fulfill(img:list)->list:
-    size = img.shape
-    h = size[0]
-    w = size[1]
-    if h == w:
-        return img
-    else:
-        p1 = 0
-        p2 = 0
-        if h > w:
-            if (h-w) % 2 == 0:
-                p1 = int((h-w)/2)
-                p2 = int((h-w)/2)
-            else:
-                p1 = int((h-w-1)/2 + 1)
-                p2 = int((h-w-1)/2)
-            img = cv2.copyMakeBorder(
-                img, 0, 0, p1, p2, cv2.BORDER_CONSTANT, value=[0, 0, 0])
-            return img
-        else:
-            if (w-h) % 2 == 0:
-                p1 = int((w-h)/2)
-                p2 = int((w-h)/2)
-            else:
-                p1 = int((w-h-1)/2 + 1)
-                p2 = int((w-h-1)/2)
-            img = cv2.copyMakeBorder(
-                img, p1, p2, 0, 0, cv2.BORDER_CONSTANT, value=[0, 0, 0])
-            return img
-
-
 def led_display(numList:list)->None:
     """
     Function description: Build a digital tube display circuit on the breadboard. Display the result with the digital tube.
@@ -185,11 +153,136 @@ def led_display(numList:list)->None:
     # step 1:
     # Clarify the relationship between led pins and GPIO pins
     # Set the GPIO pins to GPIO.OUT mode and give them the right output
+    LED_POWER=1
+    LED_A=11
+    LED_B=12
+    LED_C=13
+    LED_D=15
+    LED_E=16
+    LED_F=18
+    LED_G=21
+    LED_DP=22
     
+    GPIO.setmode(GPIO.BOARD)
+    GPIO.setup(LED_A,GPIO.OUT)
+    GPIO.setup(LED_B,GPIO.OUT)
+    GPIO.setup(LED_C,GPIO.OUT)
+    GPIO.setup(LED_D,GPIO.OUT)
+    GPIO.setup(LED_E,GPIO.OUT)
+    GPIO.setup(LED_F,GPIO.OUT)
+    GPIO.setup(LED_G,GPIO.OUT)
+    GPIO.setup(LED_DP,GPIO.OUT)
     
+    GPIO.output(LED_A, True)
+    GPIO.output(LED_B, True)
+    GPIO.output(LED_C, True)
+    GPIO.output(LED_D, True)
+    GPIO.output(LED_E, True)
+    GPIO.output(LED_F, True)
+    GPIO.output(LED_G, True)
+    GPIO.output(LED_DP, True)
     
+    for i in numList:
+        if i==0:
+            GPIO.output(LED_A, False)
+            GPIO.output(LED_B, False)
+            GPIO.output(LED_C, False)
+            GPIO.output(LED_D, False)
+            GPIO.output(LED_E, False)
+            GPIO.output(LED_F, False)
+            GPIO.output(LED_G, True)
+            time.sleep(1)
+        if i==1:
+            GPIO.output(LED_A, True)
+            GPIO.output(LED_B, False)
+            GPIO.output(LED_C, False)
+            GPIO.output(LED_D, True)
+            GPIO.output(LED_E, True)
+            GPIO.output(LED_F, True)
+            GPIO.output(LED_G, True)
+            time.sleep(1)
+        if i==2:
+            GPIO.output(LED_A, False)
+            GPIO.output(LED_B, False)
+            GPIO.output(LED_C, True)
+            GPIO.output(LED_D, False)
+            GPIO.output(LED_E, False)
+            GPIO.output(LED_F, True)
+            GPIO.output(LED_G, False)
+            time.sleep(1)
+        if i==3:
+            GPIO.output(LED_A, False)
+            GPIO.output(LED_B, False)
+            GPIO.output(LED_C, False)
+            GPIO.output(LED_D, False)
+            GPIO.output(LED_E, True)
+            GPIO.output(LED_F, True)
+            GPIO.output(LED_G, False)
+            time.sleep(1)   
+        if i==4:
+            GPIO.output(LED_A, True)
+            GPIO.output(LED_B, False)
+            GPIO.output(LED_C, False)
+            GPIO.output(LED_D, True)
+            GPIO.output(LED_E, True)
+            GPIO.output(LED_F, False)
+            GPIO.output(LED_G, False)
+            time.sleep(1)
+        if i==5:
+            GPIO.output(LED_A, False)
+            GPIO.output(LED_B, True)
+            GPIO.output(LED_C, False)
+            GPIO.output(LED_D, False)
+            GPIO.output(LED_E, True)
+            GPIO.output(LED_F, False)
+            GPIO.output(LED_G, False)
+            time.sleep(1)
+        if i==6:
+            GPIO.output(LED_A, False)
+            GPIO.output(LED_B, True)
+            GPIO.output(LED_C, False)
+            GPIO.output(LED_D, False)
+            GPIO.output(LED_E, False)
+            GPIO.output(LED_F, False)
+            GPIO.output(LED_G, False)
+            time.sleep(1)
+        if i==7:
+            GPIO.output(LED_A, False)
+            GPIO.output(LED_B, False)
+            GPIO.output(LED_C, False)
+            GPIO.output(LED_D, True)
+            GPIO.output(LED_E, True)
+            GPIO.output(LED_F, True)
+            GPIO.output(LED_G, True)
+            time.sleep(1)
+        if i==8:
+            GPIO.output(LED_A, False)
+            GPIO.output(LED_B, False)
+            GPIO.output(LED_C, False)
+            GPIO.output(LED_D, False)
+            GPIO.output(LED_E, False)
+            GPIO.output(LED_F, False)
+            GPIO.output(LED_G, False)
+            time.sleep(1)
+        if i==9:
+            GPIO.output(LED_A, False)
+            GPIO.output(LED_B, False)
+            GPIO.output(LED_C, False)
+            GPIO.output(LED_D, False)
+            GPIO.output(LED_E, True)
+            GPIO.output(LED_F, False)
+            GPIO.output(LED_G, False)
+            time.sleep(1)
     
-    
+    GPIO.output(LED_A, True)
+    GPIO.output(LED_B, True)
+    GPIO.output(LED_C, True)
+    GPIO.output(LED_D, True)
+    GPIO.output(LED_E, True)
+    GPIO.output(LED_F, True)
+    GPIO.output(LED_G, True)
+    GPIO.output(LED_DP, True)
+    sleep(2)
     # step 2:
     # Clarify the led composition of each number
     
@@ -208,7 +301,6 @@ def led_display(numList:list)->None:
     ret = None
     return ret
 
-
 def take_photo()->str:
     """
     Function description: Build the camera control circuit on the breadboard. After pressing the control button, the shooting indicator(led light) lights up and the camera takes a picture.
@@ -222,13 +314,32 @@ def take_photo()->str:
     :para
     :return: a string which contains the picture location
     """
-
+    from datetime import datetime
     ### write your codes here ###
     #############################
     # step 1: 
     #set a GPIO as an input channel for detecting
-    
-    
+    # -*- coding: utf-8 -*-
+    button=33
+    R=35
+    GPIO.setup(R, GPIO.OUT)
+    GPIO.output(R, True)
+    GPIO.setup(button,GPIO.IN,pull_up_down=GPIO.PUD_UP)
+    camera = PiCamera()
+    camera.start_preview()
+    while True:
+        if GPIO.input(button)==0:
+            GPIO.output(R, False)
+            camera.annotate_background = Color('white')
+            sleep(3)
+            timestamp = datetime.now().isoformat()
+            imgpath ="/UserData/"+timestamp
+            camera.capture('/home/pi/ProjectExercise/UserData/%s.jpg' % timestamp)
+            sleep(1)
+            camera.close()
+            GPIO.output(R, True)
+            return imgpath
+
     
     
     
@@ -250,6 +361,3 @@ def take_photo()->str:
     
     
     
-    
-    ret = None
-    return ret
