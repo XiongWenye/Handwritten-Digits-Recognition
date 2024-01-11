@@ -326,11 +326,11 @@ def take_photo()->str:
     GPIO.output(R, True)
     GPIO.setup(button,GPIO.IN,pull_up_down=GPIO.PUD_UP)
     camera = PiCamera()
+    camera.resolution = (2592,1944)
     camera.start_preview()
     while True:
         if GPIO.input(button)==0:
             GPIO.output(R, False)
-            camera.annotate_background = Color('white')
             sleep(3)
             timestamp = datetime.now().isoformat()
             imgpath ="/UserData/"+timestamp
